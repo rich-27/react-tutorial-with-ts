@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# React Tutorial TicTacToe
+
+A TicTacToe React app built following the React tutorial. Subsequently converted to TypeScript.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
