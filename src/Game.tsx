@@ -1,18 +1,20 @@
-import { useState } from 'react';
-import Board from './board/Board';
-import { Move, Player } from './types/Types';
+import { useState } from "react";
+import Board from "./board/Board";
+import { Move, Player } from "./types/Types";
 
-interface MoveRecord {
-    squares: Move[];
-    move: string;
+interface GameState {
+    boardState: Move[];
+    lastMove: string;
 };
 
 const Game = () => {
     const [history, setHistory] = useState([{
-        squares: Array(9).fill(null),
-        move: '',
-    }] as MoveRecord[]);
+        boardState: Array(9).fill(null),
+        lastMove: '',
+    }] as GameState[]);
     const [stepNumber, setStepNumber] = useState(0);
+
+    const nextPlayer = (stepNumber % 2) === 0 ? "X" : "O";
 
     const calculateWinner = (squares: Move[]) => {
         const lines = [
@@ -31,44 +33,61 @@ const Game = () => {
         return null;
     }
 
-    const getNextPlayer: () => Player = () => (
-        (stepNumber % 2) === 0 ? "X" : "O"
-    );
+    const getMoveNotation: (
+        player: Player,
+        coord: { column: string; row: string; },
+        isWinner: boolean
+    ) => string = (player, { column, row }, isWinner) => [
+        player,
+        column,
+        row,
+        (isWinner ? '#' : '')
+    ].join('');
 
-    const handleBoardClick = (i: number) => {
+    const handleBoardClick = (squareNum: number) => {
         const historySlice = history.slice(0, stepNumber + 1);
+
         const squares = historySlice[
             historySlice.length - 1
-        ].squares.slice();
-        if (squares[i] || calculateWinner(squares)) { return; }
-        squares[i] = getNextPlayer();
-        const winning = calculateWinner(squares) === squares[i];
+        ].boardState.slice();
+
+        // If the square is already set, return
+        if (squares[squareNum]) { return; }
+
+        // If the game is already won, return
+        let winner = calculateWinner(squares);
+        if (winner) { return; }
+
+        // Else, make move and recheck for winner
+        squares[squareNum] = nextPlayer;
+        winner = calculateWinner(squares);
+
         setHistory([...historySlice, {
-            squares,
-            move: squares[i] +
-                'abc'[i % 3] +
-                (3 - Math.floor(i / 3)) +
-                (winning ? '#' : ''),
+            boardState: squares,
+            lastMove: getMoveNotation(
+                nextPlayer,
+                {
+                    column: 'abc'[squareNum % 3],
+                    row: (3 - Math.floor(squareNum / 3)).toString(),
+                },
+                winner === nextPlayer
+            ),
         }]);
         setStepNumber(historySlice.length);
     }
 
     const winner = calculateWinner(
-        history[stepNumber].squares
+        history[stepNumber].boardState
     );
-
-    const status = winner ?
-        `Winner: ${winner}` :
-        `Next player: ${getNextPlayer()}`;
 
     const moveLabels = history.map((_, step) => {
         switch (step) {
             case 0:
                 return 'Start new game';
             case stepNumber:
-                return `Current move (${history[step].move})`;
+                return `Current move (${history[step].lastMove})`;
             default:
-                return `Go to move #${step} (${history[step].move})`;
+                return `Go to move #${step} (${history[step].lastMove})`;
         }
     });
 
@@ -76,12 +95,16 @@ const Game = () => {
         <div className="game">
             <div className="game-board">
                 <Board
-                    squares={history[stepNumber].squares}
-                    onClick={i => handleBoardClick(i)}
+                    squares={history[stepNumber].boardState}
+                    onClick={squareNum => handleBoardClick(squareNum)}
                 />
             </div>
             <div className="game-info">
-                <div>{status}</div>
+                <div>
+                    {winner ?
+                        `Winner: ${winner}` :
+                        `Next player: ${nextPlayer}`}
+                </div>
                 <ol>
                     {history.map((_, move) => (
                         <li key={move}>
