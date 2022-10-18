@@ -1,30 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Board from './Board';
 import { Move, Player } from './types/Types';
 
-interface GameState {
-    history: {
-        squares: Move[];
-        move: string;
-    }[];
-    stepNumber: number;
-    xIsNext: boolean;
-}
+interface MoveRecord {
+    squares: Move[];
+    move: string;
+};
 
-export default class Game extends React.Component<{}, GameState> {
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            history: [{
-                squares: Array(9).fill(null),
-                move: '',
-            }],
-            stepNumber: 0,
-            xIsNext: true,
-        };
-    }
+const Game = () => {
+    const [history, setHistory] = useState([{
+        squares: Array(9).fill(null),
+        move: '',
+    }] as MoveRecord[]);
+    const [stepNumber, setStepNumber] = useState(0);
+    const [xIsNext, setXIsNext] = useState(true);
 
-    calculateWinner(squares: Move[]) {
+    const calculateWinner = (squares: Move[]) => {
         const lines = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
             [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -41,78 +32,76 @@ export default class Game extends React.Component<{}, GameState> {
         return null;
     }
 
-    getNextPlayer(): Player {
-        return (this.state.stepNumber % 2) === 0 ? "X" : "O"
+    const getNextPlayer: () => Player = () => (
+        (stepNumber % 2) === 0 ? "X" : "O"
+    );
+
+    const handleBoardClick = (i: number) => {
+        const historySlice = history.slice(0, stepNumber + 1);
+        const squares = historySlice[
+            historySlice.length - 1
+        ].squares.slice();
+        if (squares[i] || calculateWinner(squares)) { return; }
+        squares[i] = getNextPlayer();
+        const winning = calculateWinner(squares) === squares[i];
+        setHistory([...historySlice, {
+            squares,
+            move: squares[i] +
+                'abc'[i % 3] +
+                (3 - Math.floor(i / 3)) +
+                (winning ? '#' : ''),
+        }]);
+        setStepNumber(historySlice.length);
     }
 
-    handleBoardClick(i: number) {
-        const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        const squares = history[history.length - 1].squares.slice();
-        if (squares[i] || this.calculateWinner(squares)) { return; }
-        squares[i] = this.getNextPlayer();
-        const winning = this.calculateWinner(squares) === squares[i];
-        this.setState({
-            history: [...history, {
-                squares,
-                move: squares[i] +
-                    'abc'[i % 3] +
-                    (3 - Math.floor(i / 3)) +
-                    (winning ? '#' : ''),
-            }],
-            stepNumber: history.length,
-        });
-    }
+    const jumpTo = (step: number) => { };
 
-    jumpTo(step: number) {
-        this.setState({ stepNumber: step });
-    }
+    const winner = calculateWinner(
+        history[stepNumber].squares
+    );
 
-    render() {
-        const history = this.state.history;
-        const currentStep = this.state.stepNumber;
-        const winner = this.calculateWinner(
-            history[currentStep].squares
-        );
-        const status = winner ?
-            `Winner: ${winner}` :
-            `Next player: ${this.getNextPlayer()}`;
-        const moveLabels = history.map((_, step) => {
-            switch (step) {
-                case 0:
-                    return 'Start new game';
-                case currentStep:
-                    return `Current move (${history[step].move})`;
-                default:
-                    return `Go to move #${step} (${history[step].move})`;
-            }
-        });
+    const status = winner ?
+        `Winner: ${winner}` :
+        `Next player: ${getNextPlayer()}`;
 
-        return (
-            <div className="game">
-                <div className="game-board">
-                    <Board
-                        squares={history[currentStep].squares}
-                        onClick={i => this.handleBoardClick(i)}
-                    />
-                </div>
-                <div className="game-info">
-                    <div>{status}</div>
-                    <ol>
-                        {history.map((_, move) => {
-                            return (
-                                <li key={move}>
-                                    <button
-                                        onClick={() => this.jumpTo(move)}
-                                        disabled={move === currentStep}
-                                    >
-                                        {moveLabels[move].slice()}
-                                    </button>
-                                </li>
-                            )
-                        })}
-                    </ol>
-                </div>
+    const moveLabels = history.map((_, step) => {
+        switch (step) {
+            case 0:
+                return 'Start new game';
+            case stepNumber:
+                return `Current move (${history[step].move})`;
+            default:
+                return `Go to move #${step} (${history[step].move})`;
+        }
+    });
+
+    return (
+        <div className="game">
+            <div className="game-board">
+                <Board
+                    squares={history[stepNumber].squares}
+                    onClick={i => handleBoardClick(i)}
+                />
             </div>
-        );
-    }
+            <div className="game-info">
+                <div>{status}</div>
+                <ol>
+                    {history.map((_, move) => {
+                        return (
+                            <li key={move}>
+                                <button
+                                    onClick={() => setStepNumber(move)}
+                                    disabled={move === stepNumber}
+                                >
+                                    {moveLabels[move].slice()}
+                                </button>
+                            </li>
+                        )
+                    })}
+                </ol>
+            </div>
+        </div>
+    );
 }
+
+export default Game;
