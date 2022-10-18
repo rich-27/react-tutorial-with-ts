@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import Board from './Board';
+import { useState } from 'react';
+import Board from './board/Board';
 import { Move, Player } from './types/Types';
 
 interface MoveRecord {
@@ -13,7 +13,6 @@ const Game = () => {
         move: '',
     }] as MoveRecord[]);
     const [stepNumber, setStepNumber] = useState(0);
-    const [xIsNext, setXIsNext] = useState(true);
 
     const calculateWinner = (squares: Move[]) => {
         const lines = [
@@ -54,8 +53,6 @@ const Game = () => {
         setStepNumber(historySlice.length);
     }
 
-    const jumpTo = (step: number) => { };
-
     const winner = calculateWinner(
         history[stepNumber].squares
     );
@@ -86,18 +83,16 @@ const Game = () => {
             <div className="game-info">
                 <div>{status}</div>
                 <ol>
-                    {history.map((_, move) => {
-                        return (
-                            <li key={move}>
-                                <button
-                                    onClick={() => setStepNumber(move)}
-                                    disabled={move === stepNumber}
-                                >
-                                    {moveLabels[move].slice()}
-                                </button>
-                            </li>
-                        )
-                    })}
+                    {history.map((_, move) => (
+                        <li key={move}>
+                            <button
+                                onClick={() => setStepNumber(move)}
+                                disabled={move === stepNumber}
+                            >
+                                {moveLabels[move].slice()}
+                            </button>
+                        </li>
+                    ))}
                 </ol>
             </div>
         </div>
