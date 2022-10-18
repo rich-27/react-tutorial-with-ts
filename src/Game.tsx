@@ -1,6 +1,15 @@
 import React from 'react';
 import Board from './Board';
-import { GameState, Move, Player } from './types/Types';
+import { Move, Player } from './types/Types';
+
+interface GameState {
+    history: {
+        squares: Move[];
+        move: string;
+    }[];
+    stepNumber: number;
+    xIsNext: boolean;
+}
 
 export default class Game extends React.Component<{}, GameState> {
     constructor(props: {}) {
