@@ -1,26 +1,20 @@
-import { LabelClasses, Move } from "../types/Types";
-import Label from "./Label";
-import Square from "./Square";
+import Row from "./Row";
 
 interface BoardRowProps {
-    value: string;
-    pos: number[];
-    squares: Move[];
-    onClick: (index: number) => void;
+    label: string;
+    centreData: {
+        value: string,
+        onClick?: () => void,
+    }[]
 }
 
-const BoardRow = (props: BoardRowProps) => (
-    <div className="board-row">
-        <Label class={LabelClasses.Row} text={props.value} />
-        {props.pos.map(squareNum => (
-            <Square
-                key={squareNum}
-                value={props.squares[squareNum]}
-                onClick={() => props.onClick(squareNum)}
-            />
-        ))}
-        <Label class={LabelClasses.Row} text={props.value} />
-    </div>
+const BoardRow = ({ label, centreData }: BoardRowProps) => (
+    <Row
+        edgeClass={'label row-label'}
+        edgeValue={label}
+        centreClass={'square'}
+        centreData={centreData}
+    />
 );
 
 export default BoardRow;

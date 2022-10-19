@@ -1,31 +1,48 @@
 import { useState } from "react";
 import Board from "./board/Board";
-import { Move, Player } from "./types/Types";
 
-interface GameState {
-    boardState: Move[];
-    lastMove: string;
-};
+type Player = 'X' | 'O';
+type Move = Player | null;
+
+export const cellColumns = ['a', 'b', 'c'] as const;
+type CellColumn = typeof cellColumns[number];
+export const cellRows = ['3', '2', '1'] as const;
+type CellRow = typeof cellRows[number];
+
+export type CellCoord = { column: CellColumn, row: CellRow }
+
+type RowState = Record<CellColumn, Move>;
+export type BoardState = Record<CellRow, RowState>;
 
 const Game = () => {
+    const newBoardState = (boardState?: BoardState) => cellRows.reduce((rowMap, row) => ({
+        ...rowMap,
+        [row]: cellColumns.reduce((columnMap, column) => ({
+            ...columnMap,
+            [column]: boardState?.[row]?.[column] ?? null,
+        }), {} as RowState),
+    }), {} as BoardState);
+
     const [history, setHistory] = useState([{
-        boardState: Array(9).fill(null),
+        boardState: newBoardState(),
         lastMove: '',
-    }] as GameState[]);
+    }]);
     const [stepNumber, setStepNumber] = useState(0);
 
     const nextPlayer = (stepNumber % 2) === 0 ? "X" : "O";
 
-    const calculateWinner = (squares: Move[]) => {
+    const calculateWinner = (boardState: BoardState) => {
         const lines = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6],
+            ...cellRows.map(row => cellColumns.map(column => ({ row, column }))),
+            ...cellColumns.map(column => cellRows.map(row => ({row, column}))),
+            // Generate diagonal lines
+            cellRows.map((row, index) => ({row, column: cellColumns[index]})),
+            cellRows.map((row, index) => ({row, column: cellColumns.slice().reverse()[index]})),
         ];
 
         for (const line of lines) {
-            const winner = squares[line[0]];
-            if (line.every(piece => squares[piece] === winner)) {
+            const winner = boardState[line[0].row][line[0].column];
+            if (winner && line.every(coord => boardState[coord.row][coord.column] === winner)) {
                 return winner as Player;
             }
         };
@@ -33,45 +50,34 @@ const Game = () => {
         return null;
     }
 
-    const getMoveNotation: (
-        player: Player,
-        coord: { column: string; row: string; },
-        isWinner: boolean
-    ) => string = (player, { column, row }, isWinner) => [
+    const getMoveNotation = (player: Player, { row, column }: CellCoord, isWinner: boolean) => [
         player,
-        column,
-        row,
+        `${column}${row}`,
         (isWinner ? '#' : '')
     ].join('');
 
-    const handleBoardClick = (squareNum: number) => {
+    const handleBoardClick = (coord: CellCoord) => {
         const historySlice = history.slice(0, stepNumber + 1);
 
-        const squares = historySlice[
+        let boardState = historySlice[
             historySlice.length - 1
-        ].boardState.slice();
+        ].boardState;
 
         // If the square is already set, return
-        if (squares[squareNum]) { return; }
+        if (boardState[coord.row][coord.column]) { return; }
 
         // If the game is already won, return
-        let winner = calculateWinner(squares);
+        let winner = calculateWinner(boardState);
         if (winner) { return; }
 
         // Else, make move and recheck for winner
-        squares[squareNum] = nextPlayer;
-        winner = calculateWinner(squares);
+        boardState = newBoardState(boardState);
+        boardState[coord.row][coord.column] = nextPlayer;
+        winner = calculateWinner(boardState);
 
         setHistory([...historySlice, {
-            boardState: squares,
-            lastMove: getMoveNotation(
-                nextPlayer,
-                {
-                    column: 'abc'[squareNum % 3],
-                    row: (3 - Math.floor(squareNum / 3)).toString(),
-                },
-                winner === nextPlayer
-            ),
+            boardState,
+            lastMove: getMoveNotation(nextPlayer, coord, winner === nextPlayer),
         }]);
         setStepNumber(historySlice.length);
     }
@@ -95,8 +101,8 @@ const Game = () => {
         <div className="game">
             <div className="game-board">
                 <Board
-                    squares={history[stepNumber].boardState}
-                    onClick={squareNum => handleBoardClick(squareNum)}
+                    boardState={history[stepNumber].boardState}
+                    onClick={coord => handleBoardClick(coord)}
                 />
             </div>
             <div className="game-info">
