@@ -25,7 +25,7 @@ const Game = () => {
 
         for (const line of lines) {
             const winner = squares[line[0]];
-            if (line.every(piece => squares[piece] === winner)) {
+            if (winner && line.every(piece => squares[piece] === winner)) {
                 return winner as Player;
             }
         };
