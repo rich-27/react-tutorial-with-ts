@@ -1,17 +1,18 @@
+import { Move } from "../types/Types";
 import Row from "./Row";
 
 interface BoardRowProps {
-    edgeValue: string;
+    edgeLabel: string;
     centreData: {
-        label: string
-        onClick?: () => void;
+        value: Move
+        onClick: () => void;
     }[];
 }
 
-const BoardRow = ({ edgeValue, centreData }: BoardRowProps) => (
+const BoardRow = ({ edgeLabel, centreData }: BoardRowProps) => (
     <Row
         edgeClass={'label row-label'}
-        edgeValue={edgeValue}
+        edgeLabel={edgeLabel}
         centreClass={'square'}
         centreData={centreData}
     />

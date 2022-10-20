@@ -1,12 +1,14 @@
+import { Move } from "../types/Types";
+
 interface CellProps {
     className: string;
     onClick?: () => void;
-    value: string;
+    value: Move | string;
 }
 
 const Cell = ({ className, onClick = () => {}, value }: CellProps) => (
     <button className={className} onClick={onClick}>
-        {value}
+        {value ?? ''}
     </button>
 );
 

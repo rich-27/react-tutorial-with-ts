@@ -3,9 +3,9 @@ import Row from "./Row";
 const LabelRow = () => (
     <Row
         edgeClass={'label corner-label'}
-        edgeValue={''}
+        edgeLabel={''}
         centreClass={'label column-label'}
-        centreData={['a', 'b', 'c'].map(label => ({ label }))}
+        centreData={['a', 'b', 'c'].map(label => ({ value: label }))}
     />
 );
 

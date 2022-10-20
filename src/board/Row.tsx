@@ -1,27 +1,28 @@
+import { Move } from "../types/Types";
 import Cell from "./Cell";
 
 interface RowProps {
     edgeClass: string;
-    edgeValue: string;
+    edgeLabel: string;
     centreClass: string;
     centreData: {
-        label: string
+        value: Move | string
         onClick?: () => void;
     }[];
 }
 
-const Row = ({ edgeClass, edgeValue, centreClass, centreData }: RowProps) => (
+const Row = ({ edgeClass, edgeLabel, centreClass, centreData }: RowProps) => (
     <div className="board-row">
-        <Cell className={edgeClass} value={edgeValue} />
-        {centreData.map(({ label, onClick }, index) => (
+        <Cell className={edgeClass} value={edgeLabel} />
+        {centreData.map(({ value, onClick }, index) => (
             <Cell
                 key={index}
                 className={centreClass}
-                value={label}
+                value={value}
                 onClick={onClick}
             />
         ))}
-        <Cell className={edgeClass} value={edgeValue} />
+        <Cell className={edgeClass} value={edgeLabel} />
     </div>
 );
 

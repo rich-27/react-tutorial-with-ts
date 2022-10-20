@@ -9,21 +9,20 @@ interface BoardProps {
 
 const Board = ({ squares, onClick }: BoardProps) => {
     const boardRowData = [
-        { value: '3', pos: [0, 1, 2] },
-        { value: '2', pos: [3, 4, 5] },
-        { value: '1', pos: [6, 7, 8] }
+        { label: '3', pos: [0, 1, 2] },
+        { label: '2', pos: [3, 4, 5] },
+        { label: '1', pos: [6, 7, 8] }
     ];
 
     return (
         <div>
             <LabelRow />
-            {boardRowData.map(({ value, pos }) => (
+            {boardRowData.map(({ label, pos }) => (
                 <BoardRow
-                    key={value}
-                    edgeValue={value}
+                    key={label}
+                    edgeLabel={label}
                     centreData={pos.map(pos => ({
-                        pos,
-                        label: squares[pos] ?? '',
+                        value: squares[pos],
                         onClick: () => onClick(pos)
                     }))}
                 />
