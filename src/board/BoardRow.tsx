@@ -1,5 +1,5 @@
 import { LabelClasses, Move } from "../types/Types";
-import Cell from "./Cell";
+import Row from "./Row";
 
 interface BoardRowProps {
     value: string;
@@ -8,23 +8,17 @@ interface BoardRowProps {
     onClick: (index: number) => void;
 }
 
-const BoardRow = (props: BoardRowProps) => {
-    const edgeClass = `label ${LabelClasses.Row}`;
-
-    return (
-        <div className="board-row">
-            <Cell className={edgeClass} value={props.value} />
-            {props.pos.map(squareNum => (
-                <Cell
-                    key={squareNum}
-                    className={'square'}
-                    value={props.squares[squareNum] ?? ''}
-                    onClick={() => props.onClick(squareNum)}
-                />
-            ))}
-            <Cell className={edgeClass} value={props.value} />
-        </div>
-    );
-}
+const BoardRow = (props: BoardRowProps) => (
+    <Row
+        edgeClass={`label ${LabelClasses.Row}`}
+        edgeValue={props.value}
+        centreClass={'square'}
+        centreData={props.pos.map(pos => ({
+            pos,
+            label: props.squares[pos] ?? '',
+        }))}
+        onClick={props.onClick}
+    />
+);
 
 export default BoardRow;

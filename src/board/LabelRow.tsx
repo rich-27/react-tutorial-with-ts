@@ -1,23 +1,13 @@
 import { LabelClasses } from "../types/Types";
-import Cell from "./Cell";
+import Row from "./Row";
 
-const LabelRow = () => {
-    const labels = ['a', 'b', 'c'];
-    const cornerClass = `label ${LabelClasses.Corner}`;
-
-    return (
-        <div className="board-row">
-            <Cell className={cornerClass} />
-            {labels.map(label => (
-                <Cell
-                    key={label}
-                    className={`label ${LabelClasses.Column}`}
-                    value={label}
-                />
-            ))}
-            <Cell className={cornerClass} />
-        </div>
-    );
-}
+const LabelRow = () => (
+    <Row
+        edgeClass={`label ${LabelClasses.Corner}`}
+        edgeValue={''}
+        centreClass={`label ${LabelClasses.Column}`}
+        centreData={['a', 'b', 'c'].map(label => ({ label }))}
+    />
+);
 
 export default LabelRow;
