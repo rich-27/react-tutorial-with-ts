@@ -8,7 +8,7 @@ interface BoardProps {
 }
 
 const Board = ({ boardState, onClick }: BoardProps) => (
-  <div>
+  <div className="game-board">
     <LabelRow />
     {cellRows.map((row) => (
       <BoardRow

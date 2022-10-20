@@ -121,12 +121,10 @@ const Game = () => {
 
   return (
     <div className="game">
-      <div className="game-board">
-        <Board
-          boardState={history[stepNumber].boardState}
-          onClick={(coord) => handleBoardClick(coord)}
-        />
-      </div>
+      <Board
+        boardState={history[stepNumber].boardState}
+        onClick={(coord) => handleBoardClick(coord)}
+      />
       <div className="game-info">
         <div>{winner ? `Winner: ${winner}` : `Next player: ${nextPlayer}`}</div>
         <ol>
