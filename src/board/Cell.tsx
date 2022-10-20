@@ -1,12 +1,12 @@
 interface CellProps {
     className: string;
     onClick?: () => void;
-    value: string;
+    value?: string;
 }
 
 const Cell = ({ className, onClick = () => {}, value }: CellProps) => (
     <button className={className} onClick={onClick}>
-        {value}
+        {value ?? ''}
     </button>
 );
 

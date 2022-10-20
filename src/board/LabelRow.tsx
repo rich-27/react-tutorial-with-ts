@@ -1,20 +1,21 @@
 import { LabelClasses } from "../types/Types";
-import Label from "./Label";
+import Cell from "./Cell";
 
 const LabelRow = () => {
     const labels = ['a', 'b', 'c'];
+    const cornerClass = `label ${LabelClasses.Corner}`;
 
     return (
         <div className="board-row">
-            <Label class={LabelClasses.Corner} />
+            <Cell className={cornerClass} />
             {labels.map(label => (
-                <Label
+                <Cell
                     key={label}
-                    class={LabelClasses.Column}
-                    text={label}
+                    className={`label ${LabelClasses.Column}`}
+                    value={label}
                 />
             ))}
-            <Label class={LabelClasses.Corner} />
+            <Cell className={cornerClass} />
         </div>
     );
 }
