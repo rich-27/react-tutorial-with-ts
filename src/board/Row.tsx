@@ -1,29 +1,30 @@
-import { Move } from "../Game";
+
+import { Move } from "../utils";
 import Cell from "./Cell";
 
 interface RowProps {
-    edgeClass: string;
-    edgeLabel: string;
-    centreClass: string;
-    centreData: {
-        value: Move | string
-        onClick?: () => void;
-    }[];
+  edgeClass: string;
+  edgeLabel: string;
+  centreClass: string;
+  centreData: {
+    value: Move | string;
+    onClick?: () => void;
+  }[];
 }
 
 const Row = ({ edgeClass, edgeLabel, centreClass, centreData }: RowProps) => (
-    <div className="board-row">
-        <Cell className={edgeClass} value={edgeLabel} />
-        {centreData.map(({ value, onClick }, index) => (
-            <Cell
-                key={index}
-                className={centreClass}
-                value={value}
-                onClick={onClick}
-            />
-        ))}
-        <Cell className={edgeClass} value={edgeLabel} />
-    </div>
+  <div className="board-row">
+    <Cell className={edgeClass} value={edgeLabel} />
+    {centreData.map(({ value, onClick }, index) => (
+      <Cell
+        key={index}
+        className={centreClass}
+        value={value}
+        onClick={onClick}
+      />
+    ))}
+    <Cell className={edgeClass} value={edgeLabel} />
+  </div>
 );
 
 export default Row;
