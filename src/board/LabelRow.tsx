@@ -1,3 +1,4 @@
+import { cellColumns } from "../Game";
 import Row from "./Row";
 
 const LabelRow = () => (
@@ -5,7 +6,7 @@ const LabelRow = () => (
         edgeClass={'label corner-label'}
         edgeLabel={''}
         centreClass={'label column-label'}
-        centreData={['a', 'b', 'c'].map(label => ({ value: label }))}
+        centreData={cellColumns.map(label => ({ value: label }))}
     />
 );
 
