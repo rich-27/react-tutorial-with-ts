@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Board from "./board/Board";
+import GameInfo from "./GameInfo";
 import {
   BoardState,
   calculateWinner,
@@ -72,19 +73,6 @@ const Game = () => {
     setStepNumber(historySlice.length);
   };
 
-  const winner = calculateWinner(history[stepNumber].boardState);
-
-  const moveLabels = history.map((_, step) => {
-    switch (step) {
-      case 0:
-        return "Start new game";
-      case stepNumber:
-        return `Current move (${history[step].lastMove})`;
-      default:
-        return `Go to move #${step} (${history[step].lastMove})`;
-    }
-  });
-
   return (
     <div className="game">
       <div className="game-board">
@@ -93,21 +81,13 @@ const Game = () => {
           onClick={(coord) => handleBoardClick(coord)}
         />
       </div>
-      <div className="game-info">
-        <div>{winner ? `Winner: ${winner}` : `Next player: ${nextPlayer}`}</div>
-        <ol>
-          {history.map((_, move) => (
-            <li key={move}>
-              <button
-                onClick={() => setStepNumber(move)}
-                disabled={move === stepNumber}
-              >
-                {moveLabels[move].slice()}
-              </button>
-            </li>
-          ))}
-        </ol>
-      </div>
+
+      <GameInfo
+        history={history}
+        stepNumber={stepNumber}
+        nextPlayer={nextPlayer}
+        setStepNumber={setStepNumber}
+      />
     </div>
   );
 };
