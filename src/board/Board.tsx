@@ -7,7 +7,7 @@ interface BoardProps {
     onClick: (square: number) => void;
 }
 
-const Board = (props: BoardProps) => {
+const Board = ({ squares, onClick }: BoardProps) => {
     const boardRowData = [
         { value: '3', pos: [0, 1, 2] },
         { value: '2', pos: [3, 4, 5] },
@@ -22,8 +22,8 @@ const Board = (props: BoardProps) => {
                     key={value}
                     value={value}
                     pos={pos}
-                    squares={props.squares}
-                    onClick={props.onClick}
+                    squares={squares}
+                    onClick={onClick}
                 />
             ))}
             <LabelRow />

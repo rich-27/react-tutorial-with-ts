@@ -8,16 +8,21 @@ interface BoardRowProps {
     onClick: (index: number) => void;
 }
 
-const BoardRow = (props: BoardRowProps) => (
+const BoardRow = ({
+    value,
+    pos,
+    squares,
+    onClick
+}: BoardRowProps) => (
     <Row
         edgeClass={'label row-label'}
-        edgeValue={props.value}
+        edgeValue={value}
         centreClass={'square'}
-        centreData={props.pos.map(pos => ({
+        centreData={pos.map(pos => ({
             pos,
-            label: props.squares[pos] ?? '',
+            label: squares[pos] ?? '',
         }))}
-        onClick={props.onClick}
+        onClick={onClick}
     />
 );
 
