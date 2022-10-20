@@ -1,4 +1,4 @@
-import { Move } from "../Game";
+import { Move } from "../utils";
 
 interface CellProps {
   className: string;

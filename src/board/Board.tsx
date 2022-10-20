@@ -1,4 +1,4 @@
-import { BoardState, cellColumns, CellCoord, cellRows } from "../Game";
+import { BoardState, cellColumns, CellCoord, cellRows } from "../utils";
 import BoardRow from "./BoardRow";
 import LabelRow from "./LabelRow";
 

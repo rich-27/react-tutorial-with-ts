@@ -1,4 +1,5 @@
-import { Move } from "../Game";
+
+import { Move } from "../utils";
 import Cell from "./Cell";
 
 interface RowProps {

@@ -1,4 +1,4 @@
-import { Move } from "../Game";
+import { Move } from "../utils";
 import Row from "./Row";
 
 interface BoardRowProps {

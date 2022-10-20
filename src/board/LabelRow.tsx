@@ -1,4 +1,4 @@
-import { cellColumns } from "../Game";
+import { cellColumns } from "../utils";
 import Row from "./Row";
 
 const LabelRow = () => (
