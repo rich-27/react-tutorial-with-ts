@@ -5,27 +5,20 @@ interface RowProps {
     edgeValue: string;
     centreClass: string;
     centreData: {
-        pos?: number
         label: string
+        onClick?: () => void;
     }[];
-    onClick?: (index: number) => void;
 }
 
-const Row = ({
-    edgeClass,
-    edgeValue,
-    centreClass,
-    centreData,
-    onClick
-}: RowProps) => (
+const Row = ({ edgeClass, edgeValue, centreClass, centreData }: RowProps) => (
     <div className="board-row">
         <Cell className={edgeClass} value={edgeValue} />
-        {centreData.map(({ pos, label }) => (
+        {centreData.map(({ label, onClick }, index) => (
             <Cell
-                key={pos}
+                key={index}
                 className={centreClass}
                 value={label}
-                onClick={() => onClick?.(pos ?? 0)}
+                onClick={onClick}
             />
         ))}
         <Cell className={edgeClass} value={edgeValue} />

@@ -1,28 +1,19 @@
-import { Move } from "../types/Types";
 import Row from "./Row";
 
 interface BoardRowProps {
-    value: string;
-    pos: number[];
-    squares: Move[];
-    onClick: (index: number) => void;
+    edgeValue: string;
+    centreData: {
+        label: string
+        onClick?: () => void;
+    }[];
 }
 
-const BoardRow = ({
-    value,
-    pos,
-    squares,
-    onClick
-}: BoardRowProps) => (
+const BoardRow = ({ edgeValue, centreData }: BoardRowProps) => (
     <Row
         edgeClass={'label row-label'}
-        edgeValue={value}
+        edgeValue={edgeValue}
         centreClass={'square'}
-        centreData={pos.map(pos => ({
-            pos,
-            label: squares[pos] ?? '',
-        }))}
-        onClick={onClick}
+        centreData={centreData}
     />
 );
 

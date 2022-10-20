@@ -20,10 +20,12 @@ const Board = ({ squares, onClick }: BoardProps) => {
             {boardRowData.map(({ value, pos }) => (
                 <BoardRow
                     key={value}
-                    value={value}
-                    pos={pos}
-                    squares={squares}
-                    onClick={onClick}
+                    edgeValue={value}
+                    centreData={pos.map(pos => ({
+                        pos,
+                        label: squares[pos] ?? '',
+                        onClick: () => onClick(pos)
+                    }))}
                 />
             ))}
             <LabelRow />
