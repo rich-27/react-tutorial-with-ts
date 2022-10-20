@@ -1,11 +1,10 @@
-import { LabelClasses } from "../types/Types";
 import Row from "./Row";
 
 const LabelRow = () => (
     <Row
-        edgeClass={`label ${LabelClasses.Corner}`}
+        edgeClass={'label corner-label'}
         edgeValue={''}
-        centreClass={`label ${LabelClasses.Column}`}
+        centreClass={'label column-label'}
         centreData={['a', 'b', 'c'].map(label => ({ label }))}
     />
 );

@@ -1,4 +1,4 @@
-import { LabelClasses, Move } from "../types/Types";
+import { Move } from "../types/Types";
 import Row from "./Row";
 
 interface BoardRowProps {
@@ -10,7 +10,7 @@ interface BoardRowProps {
 
 const BoardRow = (props: BoardRowProps) => (
     <Row
-        edgeClass={`label ${LabelClasses.Row}`}
+        edgeClass={'label row-label'}
         edgeValue={props.value}
         centreClass={'square'}
         centreData={props.pos.map(pos => ({
