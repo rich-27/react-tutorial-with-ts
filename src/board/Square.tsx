@@ -1,4 +1,5 @@
 import { Move } from "../types/Types";
+import Cell from "./Cell";
 
 interface SquareProps {
     value: Move;
@@ -6,9 +7,11 @@ interface SquareProps {
 };
 
 const Square = (props: SquareProps) => (
-    <button className="square" onClick={props.onClick}>
-        {props.value}
-    </button>
+    <Cell
+        className='square'
+        onClick={props.onClick}
+        value={props.value ?? ''}
+    />
 );
 
 export default Square;

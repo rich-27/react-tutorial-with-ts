@@ -1,4 +1,5 @@
 import { LabelClasses } from "../types/Types";
+import Cell from "./Cell";
 
 interface LabelProps {
     class: LabelClasses;
@@ -6,9 +7,10 @@ interface LabelProps {
 }
 
 const Label = (props: LabelProps) => (
-    <button className={`label ${props.class}`}>
-        {props.text ?? ''}
-    </button>
+    <Cell 
+        className={`label ${props.class}`}
+        value={props.text ?? ''}
+    />
 );
 
 export default Label;
