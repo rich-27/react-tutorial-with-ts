@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Board from "./board/Board";
-import { Move, Player } from "./types/Types";
+
+type Player = 'X' | 'O';
+export type Move = Player | null;
 
 interface GameState {
     boardState: Move[];
