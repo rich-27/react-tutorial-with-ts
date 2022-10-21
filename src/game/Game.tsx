@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Board from "./board/Board";
+import Board from "../board/Board";
 
 const players = ["X", "O"] as const;
 export type Player = typeof players[number];
