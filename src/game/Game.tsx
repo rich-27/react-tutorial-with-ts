@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Board from "../board/Board";
 import HistoryNavigator from "../history/HistoryNavigator";
+import StatusDisplay from "../status/StatusDisplay";
 
 const players = ["X", "O"] as const;
 export type Player = typeof players[number];
@@ -113,9 +114,6 @@ const Game = () => {
     setStepNumber(nextStep);
   };
 
-  const winner = calculateWinner(history[stepNumber].boardState);
-  const nextPlayer = history[stepNumber].nextPlayer;
-
   return (
     <div className="game">
       <Board
@@ -123,13 +121,10 @@ const Game = () => {
         onClick={(coord) => handleBoardClick(coord)}
       />
       <div className="game-info">
-        <div>
-          {winner
-            ? `Winner: ${winner}`
-            : nextPlayer
-            ? `Next player: ${nextPlayer}`
-            : "Stalemate"}
-        </div>
+        <StatusDisplay
+          winner={calculateWinner(history[stepNumber].boardState)}
+          nextPlayer={history[stepNumber].nextPlayer}
+        />
         <HistoryNavigator
           historyData={history.map(({ lastMove }, stepIndex) => ({
             step: stepIndex,
