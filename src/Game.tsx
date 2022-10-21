@@ -1,13 +1,15 @@
 import { useState } from "react";
 import Board from "./board/Board";
 
-type Player = "X" | "O";
+const players = ["X", "O"] as const;
+export type Player = typeof players[number];
 export type Move = Player | undefined;
 
 export const cellColumns = ["a", "b", "c"] as const;
 type CellColumn = typeof cellColumns[number];
 export const cellRows = ["3", "2", "1"] as const;
 type CellRow = typeof cellRows[number];
+const maxMoves = cellColumns.length * cellRows.length;
 
 export type CellCoord = { row: CellRow; column: CellColumn };
 
@@ -30,15 +32,17 @@ const Game = () => {
       {} as BoardState
     );
 
+  const getNextPlayer = (move: number) =>
+    move < maxMoves ? players[move % players.length] : null;
+
   const [history, setHistory] = useState([
     {
       boardState: newBoardState(),
       lastMove: "",
+      nextPlayer: getNextPlayer(0),
     },
   ]);
   const [stepNumber, setStepNumber] = useState(0);
-
-  const nextPlayer = stepNumber % 2 === 0 ? "X" : "O";
 
   const calculateWinner = (boardState: BoardState) => {
     const lines = [
@@ -73,40 +77,43 @@ const Game = () => {
 
   const handleBoardClick = ({ row, column }: CellCoord) => {
     const historySlice = history.slice(0, stepNumber + 1);
+    const currentState = historySlice[historySlice.length - 1];
 
-    let boardState = historySlice[historySlice.length - 1].boardState;
+    let boardState = currentState.boardState;
 
-    // If the square is already set, return
-    if (boardState[row][column]) {
+    const player = currentState.nextPlayer;
+    // If the square is already set or there's no valid nextPlayer, return
+    if (boardState[row][column] || player === null) {
       return;
     }
 
     // If the game is already won, return
-    let winner = calculateWinner(boardState);
-    if (winner) {
+    if (calculateWinner(boardState)) {
       return;
     }
 
     // Else, make move and recheck for winner
     boardState = newBoardState(boardState);
-    boardState[row][column] = nextPlayer;
-    winner = calculateWinner(boardState);
+    boardState[row][column] = player;
 
+    const nextStep = stepNumber + 1;
     setHistory([
       ...historySlice,
       {
         boardState,
         lastMove: getMoveNotation(
-          nextPlayer,
+          player,
           { row, column },
-          winner === nextPlayer
+          calculateWinner(boardState) === player
         ),
+        nextPlayer: getNextPlayer(nextStep),
       },
     ]);
-    setStepNumber(historySlice.length);
+    setStepNumber(nextStep);
   };
 
   const winner = calculateWinner(history[stepNumber].boardState);
+  const nextPlayer = history[stepNumber].nextPlayer;
 
   const moveLabels = history.map((_, step) => {
     switch (step) {
@@ -126,7 +133,13 @@ const Game = () => {
         onClick={(coord) => handleBoardClick(coord)}
       />
       <div className="game-info">
-        <div>{winner ? `Winner: ${winner}` : `Next player: ${nextPlayer}`}</div>
+        <div>
+          {winner
+            ? `Winner: ${winner}`
+            : nextPlayer
+            ? `Next player: ${nextPlayer}`
+            : "Stalemate"}
+        </div>
         <ol>
           {history.map((_, move) => (
             <li key={move}>
