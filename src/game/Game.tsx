@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Board from "../board/Board";
+import HistoryNavigator from "../history/HistoryNavigator";
 
 const players = ["X", "O"] as const;
 export type Player = typeof players[number];
@@ -115,17 +116,6 @@ const Game = () => {
   const winner = calculateWinner(history[stepNumber].boardState);
   const nextPlayer = history[stepNumber].nextPlayer;
 
-  const moveLabels = history.map((_, step) => {
-    switch (step) {
-      case 0:
-        return "Start new game";
-      case stepNumber:
-        return `Current move (${history[step].lastMove})`;
-      default:
-        return `Go to move #${step} (${history[step].lastMove})`;
-    }
-  });
-
   return (
     <div className="game">
       <Board
@@ -140,18 +130,14 @@ const Game = () => {
             ? `Next player: ${nextPlayer}`
             : "Stalemate"}
         </div>
-        <ol>
-          {history.map((_, move) => (
-            <li key={move}>
-              <button
-                onClick={() => setStepNumber(move)}
-                disabled={move === stepNumber}
-              >
-                {moveLabels[move].slice()}
-              </button>
-            </li>
-          ))}
-        </ol>
+        <HistoryNavigator
+          historyData={history.map(({ lastMove }, stepIndex) => ({
+            step: stepIndex,
+            lastMove,
+            isCurrentStep: stepIndex === stepNumber,
+            onClick: () => setStepNumber(stepIndex),
+          }))}
+        />
       </div>
     </div>
   );
