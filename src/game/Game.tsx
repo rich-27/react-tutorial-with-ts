@@ -21,10 +21,10 @@ export type BoardState = Record<CellRow, RowState>;
 const Game = () => {
   const newBoardState = (boardState?: BoardState) =>
     cellRows.reduce(
-      (rowMap, row) => ({
+      (rowMap, row): BoardState => ({
         ...rowMap,
         [row]: cellColumns.reduce(
-          (columnMap, column) => ({
+          (columnMap, column): RowState => ({
             ...columnMap,
             [column]: boardState?.[row]?.[column],
           }),
